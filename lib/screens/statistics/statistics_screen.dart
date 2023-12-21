@@ -28,14 +28,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         backgroundColor: Colors.transparent,
         title: Center(
             child: Text(
-              'Statistics',
-              style: TextStyle(color: AppColors.blue),
-            )),
+          'Statistics',
+          style: TextStyle(color: AppColors.blue),
+        )),
       ),
       body: BlocProvider(
         create: (context) =>
-        CourseBloc(GetIt.I<CourseRepository>())
-          ..add(GetCourseListEvent()),
+            CourseBloc(GetIt.I<CourseRepository>())..add(GetCourseListEvent()),
         child: BlocConsumer<CourseBloc, CourseState>(
             listener: (context, state) => {},
             builder: (context, state) {
@@ -44,122 +43,54 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               } else if (state is LoadedCourseListState) {
                 final courseList = state.courseList;
 
-                return Column(
+                return ListView(
                   children: [
                     Expanded(
-                      child: ListView(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                      child: ListView.builder(
+                        itemCount: courseList.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          final course = courseList[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Username:',
-                                  style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  '$_name',
-                                  style: TextStyle(
-                                      color: AppColors.blue,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'E-mail:',
-                                  style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  '$_email',
-                                  style: TextStyle(
-                                      color: AppColors.blue,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: AppElevatedButton(
-                              content: Text(
-                                'Edit',
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              onPressed: () {
-                                showEditDialog();
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: courseList.length,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) {
-                                final course = courseList[index];
-                                return Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Test',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                color: AppColors.grey,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width *
-                                                0.5,
-                                            child: Text(
-                                              course.name,
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  color: AppColors.blue,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Test',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: AppColors.grey,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: Text(
+                                        course.name,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            color: AppColors.blue,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      course.result == 0
-                                          ? Row(
+                                    ),
+                                  ],
+                                ),
+                                course.result == 0
+                                    ? Row(
                                         children: [
                                           Text(
                                             '${course.result}/${course.questionCount}',
                                             style: TextStyle(
                                                 color: AppColors.blue,
                                                 fontSize: 14,
-                                                fontWeight:
-                                                FontWeight.w500),
+                                                fontWeight: FontWeight.w500),
                                           ),
                                           SizedBox(width: 5),
                                           Text(
@@ -167,40 +98,36 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                                             style: TextStyle(
                                                 color: AppColors.grey,
                                                 fontSize: 11,
-                                                fontWeight:
-                                                FontWeight.w400),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                         ],
                                       )
-                                          : Text(
+                                    : Text(
                                         '${course.result}/${course.questionCount}',
                                         style: TextStyle(
                                             color: AppColors.blue,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: AppElevatedButton(
-                              content: Text(
-                                'Reset all tests',
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              onPressed: () {
-                                _showResetDialog();
-                              },
-                            ),
-                          ),
-                        ],
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: AppElevatedButton(
+                        content: Text(
+                          'Reset all tests',
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        onPressed: () {
+                          _showResetDialog();
+                        },
                       ),
                     ),
                   ],
@@ -219,8 +146,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         final nameController = TextEditingController(text: _name);
         final emailController = TextEditingController(text: _email);
         return Dialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           child: Container(
             height: 300.0,
             width: 400.0,
@@ -231,13 +158,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    height:
-                    100,
+                    height: 100,
                     child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           'Edit username',
@@ -250,24 +174,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           controller: nameController,
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColors.blue,
-                                  width: 1.0),
-                              borderRadius:
-                              BorderRadius.circular(
-                                  300.0),
+                              borderSide:
+                                  BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(300.0),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColors.blue,
-                                  width: 1.0),
-                              borderRadius:
-                              BorderRadius.circular(
-                                  300.0),
+                              borderSide:
+                                  BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(300.0),
                             ),
                             filled: true,
-                            hintStyle: TextStyle(
-                                color: AppColors.blue),
+                            hintStyle: TextStyle(color: AppColors.blue),
                             fillColor: Colors.white70,
                           ),
                         ),
@@ -275,13 +192,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     ),
                   ),
                   SizedBox(
-                    height:
-                    100,
+                    height: 100,
                     child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           'Edit E-mail',
@@ -294,24 +208,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           controller: emailController,
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColors.blue,
-                                  width: 1.0),
-                              borderRadius:
-                              BorderRadius.circular(
-                                  300.0),
+                              borderSide:
+                                  BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(300.0),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppColors.blue,
-                                  width: 1.0),
-                              borderRadius:
-                              BorderRadius.circular(
-                                  300.0),
+                              borderSide:
+                                  BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(300.0),
                             ),
                             filled: true,
-                            hintStyle: TextStyle(
-                                color: AppColors.blue),
+                            hintStyle: TextStyle(color: AppColors.blue),
                             fillColor: Colors.white70,
                           ),
                         ),
@@ -326,10 +233,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           onPressed: () {
                             context.router.pop();
                           },
-                          child: Text('Cancel', style: TextStyle(
-                              color: AppColors.blue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                                color: AppColors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -339,10 +249,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             });
                             Navigator.of(context).pop();
                           },
-                          child: Text('Save', style: TextStyle(
-                              color: AppColors.blue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                                color: AppColors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ],
                     ),
@@ -361,8 +274,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           child: Container(
             height: 105.0,
             width: 400.0,
@@ -373,10 +286,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('All test results will be reset', style: TextStyle(
-                      color: AppColors.blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),),
+                  Text(
+                    'All test results will be reset',
+                    style: TextStyle(
+                        color: AppColors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
+                  ),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -385,21 +301,28 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           onPressed: () {
                             context.router.pop();
                           },
-                          child: Text('Cancel', style: TextStyle(
-                              color: AppColors.blue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                                color: AppColors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
-                            context.read<CourseBloc>().add(
-                                ResetTestResultsEvent());
+                            context
+                                .read<CourseBloc>()
+                                .add(ResetTestResultsEvent());
                             Navigator.of(context).pop();
                           },
-                          child: Text('Continue', style: TextStyle(
-                              color: AppColors.blue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),),
+                          child: Text(
+                            'Continue',
+                            style: TextStyle(
+                                color: AppColors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ],
                     ),
